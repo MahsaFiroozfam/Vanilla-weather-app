@@ -51,6 +51,8 @@ function handlesubmit(event){
 
 function dispalyFahrenheitTemperature(event){  
     event.preventDefault();
+    celciusLink.classList.remove("active");
+    fahrenheitLink.classList.add("active");
     let fahrenheitTemperature = (celciousTemperature * 9)/5+32;
     let temperatureElement =document.querySelector("#temperature");
     temperatureElement.innerHTML =Math.round(fahrenheitTemperature);
@@ -59,8 +61,11 @@ function dispalyFahrenheitTemperature(event){
 
 function dispalyCelciusTemperature(event){
     event.preventDefault();
+    
     let temperatureElement =document.querySelector("#temperature");
     temperatureElement.innerHTML =Math.round(celciousTemperature);
+    celciusLink.classList.add("active");
+    fahrenheitLink.classList.remove("active");
 }
 let celciousTemperature = null;// global variable for temperature to use in different functions
 
