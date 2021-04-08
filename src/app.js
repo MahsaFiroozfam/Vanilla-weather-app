@@ -20,6 +20,7 @@ function formatDate(timestamp) {
   let day = days[date.getDay()];
   return `${day} ${hours}:${minutes}`;
 }
+// A function to repatedly show the html code for the forcast
 function displayForecast() {
   let forecastElement = document.querySelector("#forecast");
 
@@ -48,6 +49,15 @@ function displayForecast() {
   forecastHTML = forecastHTML + `</div>`;
   forecastElement.innerHTML = forecastHTML;
 }
+//In this function, the cordination of the searched city is passed to the api. The Api is used to get the forecast temperature.
+function getforcast(cordinate) {
+  console.log(cordinate);
+  let apiKey = "d467c6c12588add63695214f8af05053";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${cordinate.lat}&lon=${cordinate.lon}&appid=${apiKey}`;
+  axios.get(apiUrl).then(displayForecast);
+}
+
+// Display the current temperature in the searched city. it also called the function to get the forcasts for the city.
 function displayTemperature(response) {
   let cityElement = document.querySelector("#city");
   let temperatureElement = document.querySelector("#temperature");
@@ -72,14 +82,18 @@ function displayTemperature(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
+
+  getforcast(response.data.coord);
 }
 
+// A function to call the api by submited city name. Then  with the api call the display temperature function to update the app with data from the api.
 function search(city) {
   let apiKey = "d467c6c12588add63695214f8af05053";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
   axios.get(apiUrl).then(displayTemperature);
 }
+// A function to get the submited city name and pass it to search function
 function handlesubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
@@ -115,4 +129,3 @@ let celciusLink = document.querySelector("#celsius-link");
 celciusLink.addEventListener("click", dispalyCelciusTemperature);
 
 search("New York"); //default search
-displayForecast();
