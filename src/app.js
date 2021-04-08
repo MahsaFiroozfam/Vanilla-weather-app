@@ -1,3 +1,5 @@
+//Function to show the current time and date
+
 function formatDate(timestamp) {
   let date = new Date(timestamp);
   let hours = date.getHours();
@@ -31,17 +33,23 @@ function formatDate(timestamp) {
 }
 // A function to repatedly show the html code for the forcast
 function displayForecast(response) {
-  console.log(response.data.daily);
-  let forecast = response.data.daily;
   let forecastElement = document.querySelector("#forecast");
 
+  let maxTemp = null;
+  let minTemp = null;
+  let forecast = response.data.daily;
   let forecastHTML = `<div class="row">`;
   forecast.forEach(function (forecastDay, index) {
-    if (index < 4) {
-      forecastHTML =
-        forecastHTML +
-        `
-        <div class="col-3">
+    if (index < 5) {
+      if (units == "celcius") {
+        maxTemp = Math.round(forecastDay.temp.max);
+        minTemp = Math.round(forecastDay.temp.min);
+      } else {
+        maxTemp = Math.round((forecastDay.temp.max * 9) / 5 + 32);
+        minTemp = Math.round((forecastDay.temp.min * 9) / 5 + 32);
+      }
+      forecastHTML += `
+        <div class="col-2">
             <div class="weather-forecast-date">${formatDate(
               forecastDay.dt
             )}</div>
@@ -53,12 +61,8 @@ function displayForecast(response) {
             width="42"
             />
             <div class="weather-forecast-temperatures">
-            <span class="weather-forecast-temperature-max"> ${Math.round(
-              forecastDay.temp.max
-            )}° </span>
-            <span class="weather-forecast-temperature-min"> ${Math.round(
-              forecastDay.temp.min
-            )}° </span>
+            <span class="weather-forecast-temperature-max"> ${maxTemp}° </span>
+            <span class="weather-forecast-temperature-min"> ${minTemp}° </span>
             </div>
         </div>
     `;
@@ -68,6 +72,7 @@ function displayForecast(response) {
   forecastHTML = forecastHTML + `</div>`;
   forecastElement.innerHTML = forecastHTML;
 }
+
 //In this function, the cordination of the searched city is passed to the api. The Api is used to get the forecast temperature.
 function getforcast(cordinate) {
   console.log(cordinate);
@@ -86,16 +91,32 @@ function displayTemperature(response) {
   let windElement = document.querySelector("#wind");
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
+
   celciousTemperature = Math.round(response.data.main.temp);
   temperatureElement.innerHTML = Math.round(response.data.main.temp);
   cityElement.innerHTML = response.data.name;
   descriptionElement.innerHTML = response.data.weather[0].description;
-  feelsLikeElement.innerHTML = `Feels Like : ${Math.round(
-    response.data.main.feels_like
-  )}`;
+
   humidityElement.innerHTML = `Humidity: ${response.data.main.humidity}%`;
-  windElement.innerHTML = `Wind: ${Math.round(response.data.wind.speed)} m/s`;
+  console.log(units);
+  if (units == "celcius") {
+    console.log("test1");
+    feelsLikeElement.innerHTML = `Feels Like : ${Math.round(
+      response.data.main.feels_like
+    )}°`;
+    windElement.innerHTML = `Wind: ${Math.round(response.data.wind.speed)} m/s`;
+  } else {
+    console.log("test2");
+    feelsLikeElement.innerHTML = `Feels Like : ${
+      (Math.round(response.data.main.feels_like) * 9) / 5 + 32
+    }°`;
+    windElement.innerHTML = ` Wind: ${
+      (Math.round(response.data.wind.speed) * 9) / 5 + 32
+    } mph `;
+  }
+
   dateElement.innerHTML = formatDate(response.data.dt * 1000);
+
   iconElement.setAttribute(
     "src",
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
@@ -120,6 +141,7 @@ function search(city) {
 
   axios.get(apiUrl).then(displayTemperature);
 }
+
 // A function to get the submited city name and pass it to search function
 function handlesubmit(event) {
   event.preventDefault();
@@ -129,22 +151,30 @@ function handlesubmit(event) {
 
 function dispalyFahrenheitTemperature(event) {
   event.preventDefault();
+  let units = "fahrenheit";
   celciusLink.classList.remove("active");
   fahrenheitLink.classList.add("active");
   let fahrenheitTemperature = (celciousTemperature * 9) / 5 + 32;
   let temperatureElement = document.querySelector("#temperature");
   temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
+  displayForecast();
+  displayTemperature();
 }
 
 function dispalyCelciusTemperature(event) {
   event.preventDefault();
+  let units = "celcius";
 
   let temperatureElement = document.querySelector("#temperature");
   temperatureElement.innerHTML = Math.round(celciousTemperature);
   celciusLink.classList.add("active");
   fahrenheitLink.classList.remove("active");
+  displayForecast();
+  displayTemperature();
 }
+
 let celciousTemperature = null; // global variable for temperature to use in different functions
+let units = "celcius";
 
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handlesubmit);
