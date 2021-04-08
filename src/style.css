@@ -1,5 +1,6 @@
 body {
   font-family: arial, sans-serif;
+  background-color: #878787;
 }
 
 h1 {
@@ -73,6 +74,8 @@ li::first-letter {
   margin-top: 20px;
   text-align: center;
   color: black;
+  background-color: lightcyan;
+  border-radius: 5px;
 }
 .weahter-forcast-date {
   font-size: 16px;
