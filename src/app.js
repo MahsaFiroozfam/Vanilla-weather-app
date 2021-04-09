@@ -1,7 +1,6 @@
 //Function to show the current time and date
 
 function formatCurrentDate(timestamp) {
-  console.log("time");
   let date = new Date(timestamp);
   let hours = date.getHours();
   if (hours < 10) {
@@ -131,7 +130,7 @@ function displayTemperature(response) {
 
   switch (imgBackground) {
     case "01d":
-      document.getElementById("imgtest").style.backgroundColor =
+      document.getElementById("imgtest").style.backgroundImage =
         "url(Images/01d.jpg)";
       break;
     case "01n":
@@ -207,9 +206,6 @@ function displayTemperature(response) {
       document.getElementById("imgtest").style.backgroundImage =
         "url(Images/sunny.jpg)";
   }
-  // document.getElementById("imgtest").style.backgroundImage =
-  // "url(Images/03d.jpg)";
-  console.log(response.data.weather[0].icon);
 
   getforcast(response.data.coord);
 }
