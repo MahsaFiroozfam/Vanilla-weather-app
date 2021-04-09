@@ -1,6 +1,7 @@
 //Function to show the current time and date
 
-function formatDate(timestamp) {
+function formatCurrentDate(timestamp) {
+  console.log("time");
   let date = new Date(timestamp);
   let hours = date.getHours();
   if (hours < 10) {
@@ -49,22 +50,24 @@ function displayForecast(response) {
         maxTemp = Math.round((forecastDay.temp.max * 9) / 5 + 32);
         minTemp = Math.round((forecastDay.temp.min * 9) / 5 + 32);
       }
-      forecastHTML += `
+      forecastHTML += `                         
         <div class="col-2">
-            <div class="weather-forecast-date">${formatDate(
-              forecastDay.dt
-            )}</div>
-            <img
-            src="http://openweathermap.org/img/wn/${
-              forecastDay.weather[0].icon
-            }@2x.png"
-            alt=""
-            width="42"
-            />
-            <div class="weather-forecast-temperatures">
-            <span class="weather-forecast-temperature-max"> ${maxTemp}° </span>
-            <span class="weather-forecast-temperature-min"> ${minTemp}° </span>
-            </div>
+            <div class="card"> 
+                <div class="weather-forecast-date">${formatDate(
+                  forecastDay.dt
+                )}</div>
+                <img
+                src="http://openweathermap.org/img/wn/${
+                  forecastDay.weather[0].icon
+                }@2x.png"
+                alt=""
+                width="42"
+                />
+                <div class="weather-forecast-temperatures">
+                <span class="weather-forecast-temperature-max"> ${maxTemp}° </span>
+                <span class="weather-forecast-temperature-min"> ${minTemp}° </span>
+                </div>
+            </div>     
         </div>
     `;
     }
@@ -107,16 +110,16 @@ function displayTemperature(response) {
     windElement.innerHTML = `Wind: ${Math.round(response.data.wind.speed)} m/s`;
     celciousTemperature = Math.round(response.data.main.temp);
   } else if (units == "fahrenheit") {
-    feelsLikeElement.innerHTML = `Feels Like : ${
-      (Math.round(response.data.main.feels_like) * 9) / 5 + 32
-    }°`;
-    windElement.innerHTML = ` Wind: ${
-      (Math.round(response.data.wind.speed) * 9) / 5 + 32
-    } mph `;
+    feelsLikeElement.innerHTML = `Feels Like : ${Math.round(
+      (response.data.main.feels_like * 9) / 5 + 32
+    )}°`;
+    windElement.innerHTML = ` Wind: ${Math.round(
+      (response.data.wind.speed * 9) / 5 + 32
+    )} mph `;
     temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
   }
 
-  dateElement.innerHTML = formatDate(response.data.dt * 1000);
+  dateElement.innerHTML = formatCurrentDate(response.data.dt * 1000);
 
   iconElement.setAttribute(
     "src",
@@ -124,9 +127,88 @@ function displayTemperature(response) {
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
 
-  let imgtest = response.data.weather[0].icon;
-  document.getElementById("imgtest").style.backgroundImage =
-    "url(Images/sunny.jpg)";
+  let imgBackground = response.data.weather[0].icon;
+
+  switch (imgBackground) {
+    case "01d":
+      document.getElementById("imgtest").style.backgroundColor =
+        "url(Images/01d.jpg)";
+      break;
+    case "01n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/01n.jpg)";
+      break;
+    case "02d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/02d.jpg)";
+      break;
+    case "02n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/02n.jpg)";
+      break;
+    case "03d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/03d.jpg)";
+      break;
+    case "03n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/03n.jpg)";
+      break;
+    case "04d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/04d.jpg)";
+      break;
+    case "04n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/04n.jpg)";
+      break;
+    case "09d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/09d.jpg)";
+      break;
+    case "09n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/09n.jpg)";
+      break;
+    case "10d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/10d.jpg)";
+      break;
+    case "10n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/10n.jpg)";
+      break;
+    case "11d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/11d.jpg)";
+      break;
+    case "11n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/11n.jpg)";
+      break;
+    case "13d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/13d.jpg)";
+      break;
+    case "13n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/13n.jpg)";
+      break;
+    case "50d":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/50d.jpg)";
+      break;
+    case "50n":
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/50n.jpg)";
+      break;
+
+    default:
+      document.getElementById("imgtest").style.backgroundImage =
+        "url(Images/sunny.jpg)";
+  }
+  // document.getElementById("imgtest").style.backgroundImage =
+  // "url(Images/03d.jpg)";
   console.log(response.data.weather[0].icon);
 
   getforcast(response.data.coord);
@@ -152,9 +234,6 @@ function dispalyFahrenheitTemperature(event) {
   units = "fahrenheit";
   celciusLink.classList.remove("active");
   fahrenheitLink.classList.add("active");
-  //let fahrenheitTemperature = (celciousTemperature * 9) / 5 + 32;
-  //let temperatureElement = document.querySelector("#temperature");
-  //temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
   displayForecast(passForecastResponse);
   displayTemperature(passTempResponse);
 }
@@ -163,8 +242,6 @@ function dispalyCelciusTemperature(event) {
   event.preventDefault();
   units = "celcius";
 
-  //let temperatureElement = document.querySelector("#temperature");
-  //temperatureElement.innerHTML = Math.round(celciousTemperature);
   celciusLink.classList.add("active");
   fahrenheitLink.classList.remove("active");
   displayForecast(passForecastResponse);
