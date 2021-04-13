@@ -87,9 +87,3 @@ li::first-letter {
   font-size: 16px;
   opacity: 0.5;
 }
-.weather-forcast-max {
-  font-size: 13px;
-}
-.weather-forcast-min {
-  opacity: 0.5;
-}

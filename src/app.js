@@ -1,5 +1,4 @@
 //Function to show the current time and date
-
 function formatCurrentDate(timestamp) {
   let date = new Date(timestamp);
   let hours = date.getHours();
@@ -30,6 +29,7 @@ function formatDate(timestamp) {
 
   return days[date.getDay()];
 }
+
 // A function to repatedly show the html code for the forcast
 function displayForecast(response) {
   passForecastResponse = response;
